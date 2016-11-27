@@ -1,8 +1,6 @@
 # DeployChangesNotifier
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/deploy_changes_notifier`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Send notifications for the changes deployed in each build, compared to the previous build. It is a good practise to create GIT tags for each deployment. DeployChangesNotifier compares the latest deployed tag with the previous deployed tag and sends the list of new commits deployed to a Slack channel. 
 
 ## Installation
 
@@ -46,6 +44,7 @@ notifier = DeployChanges::Notifier.new do |config|
   config.slack_channel = 'Production'
   config.slack_bot_api_token = '<some_token>'
 end
+
 notifier.send_deploy_changes_notification
 ```
 
