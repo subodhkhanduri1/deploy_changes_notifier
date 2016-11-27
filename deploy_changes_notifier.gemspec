@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Deploy changes notifier"
   spec.description   = "This is a simple gem to push deploy changes notification to a Slack channel."
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/subodhkhanduri1/deploy_changes_notifier"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
