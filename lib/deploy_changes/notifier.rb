@@ -37,7 +37,7 @@ module DeployChanges
 
       config = OpenStruct.new
 
-      yield config
+      yield config if block_given?
 
       self.git_repo_url = config.git_repo_url || ENV["GIT_REPO_URL"]
       self.tag_prefix = config.tag_prefix || ENV["TAG_PREFIX"]
