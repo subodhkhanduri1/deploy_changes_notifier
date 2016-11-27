@@ -4,7 +4,7 @@
 # Requirements:
 #
 #   The following environment variables must be supplied
-#     - REPO_URL: The url of the deployed repository
+#     - GIT_REPO_URL: The url of the deployed repository
 #     - TAG_PREFIX: The prefix before the build number
 #       (Ex: "app-stg-")
 #     - DEPLOY_JOB_NAME: The name of the deploy job that was triggered
@@ -35,15 +35,20 @@ module DeployChanges
     def initialize
       self.validator = Validator.new(self)
 
-      self.git_repo_url = ENV["REPO_URL"]
-      self.tag_prefix = ENV["TAG_PREFIX"]
+      config = OpenStruct.new
 
-      self.deploy_job_build_number = ENV["DEPLOY_JOB_BUILD_NUMBER"]
-      self.deploy_job_name = ENV["DEPLOY_JOB_NAME"]
+      yield config
+
+      self.git_repo_url = config.git_repo_url || ENV["GIT_REPO_URL"]
+      self.tag_prefix = config.tag_prefix || ENV["TAG_PREFIX"]
+
+      self.deploy_job_build_number = config.deploy_job_build_number || ENV["DEPLOY_JOB_BUILD_NUMBER"]
+      self.deploy_job_name = config.deploy_job_name || ENV["DEPLOY_JOB_NAME"]
 
       self.new_tag_name = tag_prefix + deploy_job_build_number
 
-      self.slack_channel = ENV["SLACK_CHANNEL"]
+      self.slack_channel = config.slack_channel || ENV["SLACK_CHANNEL"]
+      self.slack_bot_api_token = config.slack_bot_api_token || ENV["SLACK_BOT_API_TOKEN"]
       configure_slack
     end
 
@@ -67,7 +72,7 @@ module DeployChanges
     private
 
     attr_writer :new_tag_name
-    attr_accessor :validator
+    attr_accessor :validator, :slack_bot_api_token
 
     def configure_slack
       validator.validate_slack_api_token(ENV["SLACK_BOT_API_TOKEN"])

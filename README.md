@@ -20,9 +20,36 @@ Or install it yourself as:
 
     $ gem install deploy_changes_notifier
 
+Or use the github url:
+
+```ruby
+gem 'deploy_changes_notifier', git: "https://github.com/subodhkhanduri1/deploy_changes_notifier.git"
+```
+
 ## Usage
 
-TODO: Write usage instructions here
+Require the gem
+
+```ruby
+require 'deploy_changes'
+```
+
+Send notification
+
+```ruby
+notifier = DeployChanges::Notifier.new do |config|
+  config.git_repo_url = 'https://github.com/<your_organization>/<your_repo_name>'
+  # Tags are expected to be numbered in sequential order. Build numbers would work nicely.
+  config.tag_prefix = 'app-prd-'
+  config.deploy_job_name = '<your_deploy_job_name>'
+  config.deploy_job_build_number = 3 # The latest deploy job build number
+  config.slack_channel = 'Production'
+  config.slack_bot_api_token = '<some_token>'
+end
+notifier.send_deploy_changes_notification
+```
+
+To supply the config parameters to a script, pass in environment variables with the same name as the config variables. If you pass in environment variables, there is no need to pass config variables in the constructor.
 
 ## Development
 
@@ -32,7 +59,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/deploy_changes_notifier.
+Bug reports and pull requests are welcome on GitHub at https://github.com/subodhkhanduri1/deploy_changes_notifier.
 
 
 ## License
