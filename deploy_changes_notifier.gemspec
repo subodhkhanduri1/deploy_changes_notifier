@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "deploy_changes_notifier"
   spec.version       = DeployChanges::VERSION
   spec.authors       = ["Subodh Khanduri"]
-  spec.email         = ["subodh.khanduri@oyorooms.com"]
+  spec.email         = ["subodhkhanduri1@gmail.com"]
 
   spec.summary       = "Deploy changes notifier"
   spec.description   = "This is a simple gem to push deploy changes notification to a Slack channel."
