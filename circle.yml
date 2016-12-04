@@ -1,0 +1,7 @@
+dependencies:
+  pre:
+    - gem install bundler -v 1.13
+
+test:
+  override:
+    - bundle exec rspec spec
