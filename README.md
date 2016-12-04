@@ -1,6 +1,7 @@
 # DeployChangesNotifier
 
 [![CircleCI](https://circleci.com/gh/subodhkhanduri1/deploy_changes_notifier/tree/master.svg?style=shield)](https://circleci.com/gh/subodhkhanduri1/deploy_changes_notifier/tree/master)
+[![Issue Count](https://codeclimate.com/github/subodhkhanduri1/deploy_changes_notifier/badges/issue_count.svg)](https://codeclimate.com/github/subodhkhanduri1/deploy_changes_notifier)
 
 Send notifications for the changes deployed in each build, compared to the previous build. It is a good practise to create GIT tags for each deployment. DeployChangesNotifier compares the latest deployed tag with the previous deployed tag and sends the list of new commits deployed to a Slack channel. 
 
