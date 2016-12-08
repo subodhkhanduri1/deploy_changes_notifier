@@ -25,8 +25,6 @@ describe DeployChanges::Notifier do
     allow(validator).to receive(:validate_slack_channel_name)
     allow(validator).to receive(:validate_new_tag)
     allow(validator).to receive(:validate_slack_api_token)
-    allow(validator).to receive(:validate_repo_cloned)
-    allow(validator).to receive(:last_command_successful?) { true }
 
     allow(slack_client).to receive(:auth_test)
     allow(slack_client).to receive(:chat_postMessage)

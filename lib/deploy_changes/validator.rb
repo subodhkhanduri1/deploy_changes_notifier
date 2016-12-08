@@ -4,11 +4,9 @@ require 'English'
 module DeployChanges
   class Validator
 
-    attr_accessor :notifier, :error_raiser
-
-    def initialize(notifier_object)
+    def initialize(notifier_object, error_raiser)
       self.notifier = notifier_object
-      self.error_raiser = ErrorRaiser.new
+      self.error_raiser = error_raiser
     end
 
     def validate_repo_url(repo_url)
@@ -47,17 +45,9 @@ module DeployChanges
       error_raiser.raise_slack_api_token_missing_error
     end
 
-    def validate_repo_cloned(repo_directory_name)
-      error_raiser.raise_git_repo_clone_failed_error(
-        notifier.git_repo_url
-      ) unless last_command_successful? && Dir.exist?(repo_directory_name)
-    end
-
-    def last_command_successful?
-      $CHILD_STATUS.success?
-    end
-
     private
+
+    attr_accessor :notifier, :error_raiser
 
     def git_repo_url_regex
       /^https:\/\/github.com\/(.*)\/(.*)/

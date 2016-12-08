@@ -33,7 +33,8 @@ module DeployChanges
     )
 
     def initialize
-      self.validator = Validator.new(self)
+      self.error_raiser = ErrorRaiser.new
+      self.validator = Validator.new(self, error_raiser)
 
       config = OpenStruct.new
 
@@ -72,7 +73,7 @@ module DeployChanges
     private
 
     attr_writer :new_tag_name
-    attr_accessor :validator, :slack_bot_api_token
+    attr_accessor :validator, :error_raiser, :slack_bot_api_token
 
     def configure_slack
       validator.validate_slack_api_token(ENV["SLACK_BOT_API_TOKEN"])
@@ -114,7 +115,7 @@ module DeployChanges
       return [] if previous_tag_name.nil? || previous_tag_name.empty?
 
       deploy_changes_string = deploy_changes_command_output
-      return [] unless validator.last_command_successful?
+      return [] unless last_command_successful?
 
       deploy_changes_string.split("\n")
     end
@@ -162,7 +163,13 @@ module DeployChanges
 
       `git clone #{git_repo_url}`
 
-      validator.validate_repo_cloned(git_repo_directory)
+      unless last_command_successful? && Dir.exist?(repo_directory_name)
+        error_raiser.raise_git_repo_clone_failed_error
+      end
+    end
+
+    def last_command_successful?
+      $CHILD_STATUS.success?
     end
 
     def cleanup_repo
