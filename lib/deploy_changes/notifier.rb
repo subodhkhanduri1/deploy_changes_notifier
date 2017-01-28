@@ -32,24 +32,12 @@ module DeployChanges
       :new_tag_name
     )
 
-    def initialize
-      self.error_raiser = ErrorRaiser.new
-      self.validator = Validator.new(self, error_raiser)
+    def initialize(&block)
+      create_required_objects
 
-      config = OpenStruct.new
+      config = build_config(&block)
+      set_required_values(config)
 
-      yield config if block_given?
-
-      self.git_repo_url = config.git_repo_url || ENV["GIT_REPO_URL"]
-      self.tag_prefix = config.tag_prefix || ENV["TAG_PREFIX"]
-
-      self.deploy_job_build_number = config.deploy_job_build_number || ENV["DEPLOY_JOB_BUILD_NUMBER"]
-      self.deploy_job_name = config.deploy_job_name || ENV["DEPLOY_JOB_NAME"]
-
-      self.new_tag_name = tag_prefix + deploy_job_build_number
-
-      self.slack_channel = config.slack_channel || ENV["SLACK_CHANNEL"]
-      self.slack_bot_api_token = config.slack_bot_api_token || ENV["SLACK_BOT_API_TOKEN"]
       configure_slack
     end
 
@@ -74,6 +62,32 @@ module DeployChanges
 
     attr_writer :new_tag_name
     attr_accessor :validator, :error_raiser, :slack_bot_api_token
+
+    def create_required_objects
+      self.error_raiser = ErrorRaiser.new
+      self.validator = Validator.new(self, error_raiser)
+    end
+
+    def build_config(&block)
+      config = OpenStruct.new
+
+      yield config if block_given?
+
+      config
+    end
+
+    def set_required_values(config)
+      self.git_repo_url = config.git_repo_url || ENV["GIT_REPO_URL"]
+      self.tag_prefix = config.tag_prefix || ENV["TAG_PREFIX"]
+
+      self.deploy_job_build_number = config.deploy_job_build_number || ENV["DEPLOY_JOB_BUILD_NUMBER"]
+      self.deploy_job_name = config.deploy_job_name || ENV["DEPLOY_JOB_NAME"]
+
+      self.new_tag_name = tag_prefix + deploy_job_build_number
+
+      self.slack_channel = config.slack_channel || ENV["SLACK_CHANNEL"]
+      self.slack_bot_api_token = config.slack_bot_api_token || ENV["SLACK_BOT_API_TOKEN"]
+    end
 
     def configure_slack
       validator.validate_slack_api_token(ENV["SLACK_BOT_API_TOKEN"])
